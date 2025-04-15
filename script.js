@@ -85,25 +85,113 @@ document.addEventListener('click', (event) => {
 
 document.querySelectorAll('.service-toggle').forEach(toggle => {
     toggle.addEventListener('click', () => {
-      const dropdown = toggle.nextElementSibling
-      const icon = toggle.querySelector('.dropdown-icon')
-  
-      dropdown.classList.toggle('hidden')
-      icon.classList.toggle('rotate-180')
+        const dropdown = toggle.nextElementSibling
+        const icon = toggle.querySelector('.dropdown-icon')
+
+        dropdown.classList.toggle('hidden')
+        icon.classList.toggle('rotate-180')
     })
-  })
-  
-  
-const navbar = document.getElementById('navbar')
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.remove('absolute')
-        navbar.classList.add('fixed', 'bg-white/40', 'shadow', 'backdrop-blur-lg')
-    } else {
-        navbar.classList.remove('fixed', 'bg-white/40', 'shadow', 'backdrop-blur-lg')
-        navbar.classList.add('absolute')
-    }
 })
+
+
+
+gsap.registerPlugin(ScrollTrigger);
+
+ScrollTrigger.create({
+    trigger: document.body,
+    start: "top -50",
+    onEnter: () => {
+        gsap.set("#navbar", {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: "rgba(255, 255, 255, 0.4)",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            backdropFilter: "blur(10px)",
+        });
+    },
+    onLeaveBack: () => {
+        gsap.set("#navbar", {
+            position: "absolute",
+            backgroundColor: "transparent",
+            boxShadow: "none",
+            backdropFilter: "none",
+        });
+    }
+});
+
+
+// Create a timeline for sequenced animations
+const tl = gsap.timeline();
+
+// Background shape animation
+tl.fromTo(".bg-shape",
+    {
+        skewX: "0deg",
+        width: "100%",
+        opacity: 1
+    },
+    {
+        skewX: "17deg",
+        width: "60%",
+        opacity: 1,
+        duration: 1.5,
+        ease: "power3.out"
+    }
+);
+
+
+// Text content animations
+tl.from("#home h1", {
+    y: 50,
+    opacity: 0,
+    duration: 0.7,
+    ease: "back.out(1.7)"
+}, "-=0.8")
+
+    .from("#home h2", {
+        y: 30,
+        opacity: 0,
+        duration: 0.7,
+        ease: "back.out(1.7)"
+    })
+
+    .from("#home .flex-1 p", {
+        y: 20,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.2,
+        ease: "power2.out"
+    }, "-=0.5")
+
+    .from("#home .hireMe", {
+        y: 10,
+        opacity: 0,
+        duration: 0.7,
+        stagger: 0.2,
+        ease: "power2.out"
+    }, "-=0.5")
+
+
+
+gsap.to("#home img", {
+    y: "15px",
+    duration: 2,
+    repeat: -1,
+    yoyo: true,
+    ease: "sine.inOut",
+});
+gsap.from("#home img", {
+    x: "100%",
+    duration: 2,
+    repeat: 0,
+    yoyo: true,
+    ease: "sine.inOut",
+});
+
+
+
 
 
 // smooth scroll
