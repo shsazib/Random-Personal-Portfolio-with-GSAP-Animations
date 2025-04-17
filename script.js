@@ -122,9 +122,9 @@ ScrollTrigger.create({
 });
 
 
-// Create a timeline for sequenced animations
 const tl = gsap.timeline();
 
+// Hero section
 // Background shape animation
 tl.fromTo(".bg-shape",
     {
@@ -142,7 +142,6 @@ tl.fromTo(".bg-shape",
 );
 
 
-// Text content animations
 tl.from("#home h1", {
     y: 50,
     opacity: 0,
@@ -173,8 +172,6 @@ tl.from("#home h1", {
         ease: "power2.out"
     }, "-=0.5")
 
-
-
 gsap.to("#home img", {
     y: "15px",
     duration: 2,
@@ -191,6 +188,125 @@ gsap.from("#home img", {
 });
 
 
+// About
+gsap.from("#about img", {
+    x: "-100%",
+    duration: 1.2,
+    ease: "power2.out",
+    scrollTrigger: {
+        trigger: "#about",
+        start: "top 50%",
+        toggleActions: "play none none none"
+    }
+});
+
+gsap.from("#about .about-pogress", {
+    x: "-100%",
+    delay: "0.5",
+    duration: 0.5,
+    ease: "power2.out",
+    scrollTrigger: {
+        trigger: "#about",
+        start: "top 50%",
+        toggleActions: "play none none none"
+    }
+});
+
+
+// Service
+document.addEventListener('DOMContentLoaded', function () {
+    const serviceCards = document.querySelectorAll('#service .service-card');
+
+    // Add hover animation to each card
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            gsap.to(card, {
+                y: -10,
+                scale: 1.02,
+                duration: 0.1,
+                ease: "power2.out",
+                boxShadow: "0 10px 20px rgba(0,0,0,0.15)"
+            });
+
+            const icon = card.querySelector('svg');
+            gsap.to(icon, {
+                y: -5,
+                duration: 0.1,
+                ease: "power2.out"
+            });
+        });
+
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+                y: 0,
+                scale: 1,
+                duration: 0.1,
+                ease: "power2.out",
+                boxShadow: "0 4px 11px 1px rgba(0,0,0,0.1)"
+            });
+
+            const icon = card.querySelector('svg');
+            gsap.to(icon, {
+                y: 0,
+                duration: 0.1
+            });
+        });
+    });
+});
+
+
+// count section
+document.addEventListener('DOMContentLoaded', function () {
+    const countSection = document.querySelector('.count-section');
+    const counters = document.querySelectorAll('.count-section h2');
+    let animationStarted = false;
+
+    // Store original values and set initial state
+    counters.forEach(counter => {
+        counter.dataset.target = counter.textContent;
+        counter.textContent = '0';
+    });
+
+    function animateCounters() {
+        if (animationStarted) return;
+        animationStarted = true;
+
+        counters.forEach(counter => {
+            const target = parseInt(counter.dataset.target.replace('+', ''));
+            const suffix = counter.dataset.target.includes('+') ? '+' : '';
+            const duration = 2000; // 2 seconds
+            const startTime = Date.now();
+
+            function updateCounter() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const currentValue = Math.floor(progress * target);
+
+                counter.textContent = currentValue + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+
+            requestAnimationFrame(updateCounter);
+        });
+    }
+
+    function checkScroll() {
+        const sectionTop = countSection.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+
+        if (sectionTop < windowHeight * 0.8) {
+            animateCounters();
+            window.removeEventListener('scroll', checkScroll);
+        }
+    }
+
+    window.addEventListener('scroll', checkScroll);
+    checkScroll();
+});
+
 
 
 
@@ -203,3 +319,4 @@ document.querySelectorAll('a[href^="#"]'.forEach(anchor => {
         });
     });
 }));
+
